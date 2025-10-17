@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'apps.sensors',
     'apps.readings',
+    'apps.authentication'
 ]
 
 MIDDLEWARE = [
