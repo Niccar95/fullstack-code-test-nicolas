@@ -4,7 +4,7 @@ from ninja import NinjaAPI, Schema
 from ninja.security import HttpBearer 
 from rest_framework_simplejwt.tokens import AccessToken
 
-api = NinjaAPI()
+api = NinjaAPI(urls_namespace='sensors')
 
 class SensorSchema(Schema):
     name: str

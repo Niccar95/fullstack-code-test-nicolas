@@ -1,8 +1,58 @@
-from ninja import NinjaAPI
+from typing import List
+from ninja.security import HttpBearer 
+from rest_framework_simplejwt.tokens import AccessToken
+from ninja import NinjaAPI, Schema
+from datetime import datetime
+from apps.readings.models import Reading
+from apps.sensors.models import Sensor 
 
-api = NinjaAPI()
 
+api = NinjaAPI(urls_namespace='readings')
 
-@api.get("/hello")
-def hello(request):
-    return "Hello world"
+class ReadingSchema(Schema):
+    temperature: float
+    humidity: float
+    timestamp: datetime
+
+class ReadingSchemaList(Schema):
+    id: int
+    sensor_id: int
+    temperature: float
+    humidity: float
+    timestamp: datetime
+    
+class JWTAuth(HttpBearer):
+    def authenticate(self, request, token):
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            from django.contrib.auth.models import User
+            return User.objects.get(id=user_id)
+        except:
+            return None
+
+@api.get("/api/sensors/{sensor_id}/readings/", auth=JWTAuth(), response=List[ReadingSchemaList])
+def list_readings(request, sensor_id: int, timestamp_from: datetime = None, timestamp_to: datetime = None):
+    sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
+    
+    readings = Reading.objects.filter(sensor=sensor)
+
+    if timestamp_from:
+        readings = readings.filter(timestamp__gte=timestamp_from)
+    if timestamp_to:
+        readings = readings.filter(timestamp__lte=timestamp_to)
+    
+    return readings
+
+@api.post("/api/sensors/{sensor_id}/readings/", auth=JWTAuth(), response=ReadingSchema)
+def create_reading(request, sensor_id: int, payload: ReadingSchema):
+     sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
+     
+     reading = Reading.objects.create(
+        sensor=sensor,
+        temperature=payload.temperature,
+        humidity=payload.humidity,
+        timestamp=payload.timestamp
+    )
+     
+     return reading

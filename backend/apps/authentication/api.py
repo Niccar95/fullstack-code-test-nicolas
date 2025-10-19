@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-api = NinjaAPI(csrf=True)
+api = NinjaAPI(csrf=True, urls_namespace='auth')
 
 
 class LoginSchema(Schema):
