@@ -4,15 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
-
 api = NinjaAPI(urls_namespace='auth')
-
-
 class LoginSchema(Schema):
     username: str
     password: str
-
-
 class RegisterSchema(Schema):
     username: str
     email: str

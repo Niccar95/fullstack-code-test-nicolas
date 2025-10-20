@@ -19,7 +19,6 @@ def test_register_user():
     assert 'access_token' in data
     assert 'refresh_token' in data
     assert 'user' in data
-    
     assert User.objects.filter(username='testtest').exists()
     
     
@@ -40,19 +39,43 @@ def test_login_success():
      
      assert response.status_code == 200
      data = response.json()
-     print("ass", data) 
      assert data['success'] == True
      assert 'access_token' in data
      assert 'refresh_token' in data
      assert 'user' in data
-     pass
-
-# @pytest.mark.django_db
-# def test_login_wrong_password():
-#     # Test login fails with wrong password
-#     pass
-
-# @pytest.mark.django_db  
-# def test_login_user_not_found():
-#     # Test login fails with non-existent user
-#     pass
+ 
+@pytest.mark.django_db
+def test_login_wrong_password():
+    
+     User.objects.create_user(
+        username='testtest',
+        email='test@test.com',
+        password='password123'
+    )
+     client = Client()
+     
+     response = client.post('/api/auth/login', {
+        'username': 'testtest',
+        'password': 'password1234'
+    }, content_type='application/json')
+     
+     assert response.status_code == 200
+     data = response.json()
+     assert data['success'] == False
+     assert data['message'] == 'Invalid credentials' 
+      
+@pytest.mark.django_db
+def test_login_user_not_found():
+    
+     client = Client()
+     
+     response = client.post('/api/auth/login', {
+        'username': 'testtest',
+        'password': 'password1234'
+    }, content_type='application/json')
+     
+     assert response.status_code == 200
+     data = response.json()
+     assert data['success'] == False
+     assert data['message'] == 'Invalid credentials'
+ 
