@@ -1,12 +1,11 @@
 from ninja import NinjaAPI, Schema
 from ninja.security import django_auth
 from django.contrib.auth import authenticate, login, logout
-from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-api = NinjaAPI(csrf=True, urls_namespace='auth')
+api = NinjaAPI(urls_namespace='auth')
 
 
 class LoginSchema(Schema):
@@ -18,11 +17,6 @@ class RegisterSchema(Schema):
     username: str
     email: str
     password: str
-
-
-@api.get("/set-csrf-token")
-def get_csrf_token(request):
-    return {"csrftoken": get_token(request)}
 
 @api.post("/login")
 def login_view(request, payload: LoginSchema):
@@ -53,21 +47,30 @@ def logout_view(request):
 
 @api.post("/register")
 def register(request, payload: RegisterSchema):
-
     if User.objects.filter(username=payload.username).exists():
         return {"success": False, "message": "Username already exists"}
 
     if User.objects.filter(email=payload.email).exists():
         return {"success": False, "message": "Email already exists"}
 
-    User.objects.create_user(
+    user = User.objects.create_user(
         username=payload.username,
         email=payload.email,
         password=payload.password
     )
-
-    return {"success": True, "message": "User registered successfully"}
-
-
+    
+    refresh = RefreshToken.for_user(user)
+    
+    return {
+        "success": True,
+        "message": "User registered successfully",
+        "access_token": str(refresh.access_token),
+        "refresh_token": str(refresh),
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
+    }
 
 
