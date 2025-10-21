@@ -58,7 +58,7 @@ def test_login_wrong_password():
         'password': 'password12'
     }, content_type='application/json')
     
-    assert response.status_code == 200
+    assert response.status_code == 401
     data = response.json()
     assert data['success'] == False
     assert data['message'] == 'Invalid credentials'
@@ -67,13 +67,13 @@ def test_login_wrong_password():
 @pytest.mark.django_db
 def test_login_user_not_found():
     client = Client()
-    
+
     response = client.post('/api/auth/login', {
         'username': 'blablabla',
         'password': 'password123'
     }, content_type='application/json')
-    
-    assert response.status_code == 200
+
+    assert response.status_code == 401
     data = response.json()
     assert data['success'] == False
     assert data['message'] == 'Invalid credentials'

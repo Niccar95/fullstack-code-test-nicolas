@@ -13,7 +13,7 @@ class RegisterSchema(Schema):
     email: str
     password: str
 
-@api.post("/login")
+@api.post("/login", response={200: dict, 401: dict})
 def login_view(request, payload: LoginSchema):
     user = authenticate(request, username=payload.username, password=payload.password)
     if user is not None:
@@ -32,7 +32,7 @@ def login_view(request, payload: LoginSchema):
                 "email": user.email
             }
         }
-    return {"success": False, "message": "Invalid credentials"}
+    return 401, {"success": False, "message": "Invalid credentials"}
 
 
 @api.post("/logout", auth=django_auth)
@@ -40,22 +40,22 @@ def logout_view(request):
     logout(request)
     return {"message": "Logged out"}
 
-@api.post("/register")
+@api.post("/register", response={200: dict, 400: dict})
 def register(request, payload: RegisterSchema):
     if User.objects.filter(username=payload.username).exists():
-        return {"success": False, "message": "Username already exists"}
+        return 400, {"success": False, "message": "Username already exists"}
 
     if User.objects.filter(email=payload.email).exists():
-        return {"success": False, "message": "Email already exists"}
+        return 400, {"success": False, "message": "Email already exists"}
 
     user = User.objects.create_user(
         username=payload.username,
         email=payload.email,
         password=payload.password
     )
-    
+
     refresh = RefreshToken.for_user(user)
-    
+
     return {
         "success": True,
         "message": "User registered successfully",
