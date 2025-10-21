@@ -31,7 +31,7 @@ class JWTAuth(HttpBearer):
         except:
             return None
 
-@api.get("/api/sensors/{sensor_id}/readings/", auth=JWTAuth(), response=List[ReadingSchemaList])
+@api.get("/sensors/{sensor_id}/readings", auth=JWTAuth(), response=List[ReadingSchemaList])
 def list_readings(request, sensor_id: int, timestamp_from: datetime = None, timestamp_to: datetime = None):
     sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
     
@@ -44,7 +44,7 @@ def list_readings(request, sensor_id: int, timestamp_from: datetime = None, time
     
     return readings
 
-@api.post("/api/sensors/{sensor_id}/readings/", auth=JWTAuth(), response=ReadingSchema)
+@api.post("/sensors/{sensor_id}/readings", auth=JWTAuth(), response=ReadingSchema)
 def create_reading(request, sensor_id: int, payload: ReadingSchema):
      sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
      
