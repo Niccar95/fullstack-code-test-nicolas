@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { logoutService } from "../services/auth";
+import { logout } from "../services/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const userLogout = () => {
-    logoutService();
+    logout();
     navigate("/");
   };
 

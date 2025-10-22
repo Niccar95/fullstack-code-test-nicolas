@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { registerService } from "../services/auth";
+import { register } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -43,7 +43,7 @@ const Register = () => {
 
     if (hasError) return;
 
-    const response = await registerService(username, email, password);
+    const response = await register(username, email, password);
     if (response.success) {
       console.log("User created succesfully!");
       navigate("/");
@@ -118,7 +118,7 @@ const Register = () => {
 
         <button
           type="submit"
-          className="w-full p-3 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition"
+          className="w-full p-3 bg-[#4B4A7F] text-white font-semibold rounded hover:bg-[#3d3a66] transition"
         >
           Sign Up
         </button>

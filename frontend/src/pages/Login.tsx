@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { loginService } from "../services/auth";
+import { login } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -32,7 +32,7 @@ const Login = () => {
 
     if (hasError) return;
 
-    const response = await loginService(username, password);
+    const response = await login(username, password);
     if (response.success) {
       console.log("Login successful!");
       navigate("/dashboard");
@@ -89,7 +89,7 @@ const Login = () => {
 
         <button
           type="submit"
-          className="w-full p-3 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition"
+          className="w-full p-3 bg-[#4B4A7F] text-white font-semibold rounded hover:bg-[#3d3a66] transition"
         >
           Login
         </button>

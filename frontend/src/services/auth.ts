@@ -1,11 +1,18 @@
 import axios from "axios";
+import type { AuthResponse } from "../types/sensor";
 
-export async function loginService(username: string, password: string) {
+export async function login(
+  username: string,
+  password: string
+): Promise<{ success: boolean; data?: AuthResponse; error?: string }> {
   try {
-    const response = await axios.post("http://localhost:8000/api/auth/login", {
-      username,
-      password,
-    });
+    const response = await axios.post<AuthResponse>(
+      "http://localhost:8000/api/auth/login",
+      {
+        username,
+        password,
+      }
+    );
 
     if (response.data.success) {
       sessionStorage.setItem("access_token", response.data.access_token);
@@ -18,13 +25,13 @@ export async function loginService(username: string, password: string) {
   }
 }
 
-export async function registerService(
+export async function register(
   username: string,
   email: string,
   password: string
-) {
+): Promise<{ success: boolean; data?: AuthResponse; error?: string }> {
   try {
-    const response = await axios.post(
+    const response = await axios.post<AuthResponse>(
       "http://localhost:8000/api/auth/register",
       {
         username,
@@ -36,8 +43,8 @@ export async function registerService(
     sessionStorage.setItem("access_token", response.data.access_token);
 
     return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error };
+  } catch {
+    return { success: false, error: "Registration failed" };
   }
 }
 
@@ -45,6 +52,6 @@ export function getAccessToken() {
   return sessionStorage.getItem("access_token");
 }
 
-export function logoutService() {
+export function logout() {
   sessionStorage.removeItem("access_token");
 }
