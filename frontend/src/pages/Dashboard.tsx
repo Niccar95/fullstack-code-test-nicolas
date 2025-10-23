@@ -47,7 +47,8 @@ const Dashboard = () => {
 
   return (
     <section>
-      <h1>Welcome back!</h1>
+      <h1 className="text-4xl font-bold text-[#4B4A7F] mb-2">Welcome back!</h1>
+      <p className="text-gray-600 mb-4">Manage and monitor all your sensors</p>
       {sensors ? (
         <>
           <SensorList sensorList={sensors} sensorSearch={handleSearch} refetchSensors={refetchSensors} />
