@@ -26,3 +26,30 @@ export const getReadings = async (
     return { success: false, error: "Failed to fetch readings" };
   }
 };
+
+export const addReading = async (
+  sensorId: number,
+  temperature: number,
+  humidity: number
+): Promise<{ success: boolean; data?: Reading; error?: string }> => {
+  try {
+    const token = getAccessToken();
+    const timestamp = new Date().toISOString();
+    const response = await axios.post<{ success: boolean; data: Reading }>(
+      `http://localhost:8000/api/sensors/${sensorId}/readings`,
+      {
+        temperature,
+        humidity,
+        timestamp,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch {
+    return { success: false, error: "Failed to add reading" };
+  }
+};

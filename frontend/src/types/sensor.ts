@@ -8,5 +8,6 @@ export interface Sensor {
 export interface SensorResponse {
   success: boolean;
   data?: Sensor[];
+  has_more?: boolean;
   error?: string;
 }

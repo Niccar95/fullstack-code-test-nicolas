@@ -41,6 +41,8 @@ def list_sensors(request, page: int = 1, page_size: int = 10, q: str = None):
     if q:
         sensors = sensors.filter(name__icontains=q) | sensors.filter(model__icontains=q)
 
+    total_count = sensors.count()
+
     start = (page - 1) * page_size
     end = start + page_size
     sensors = sensors[start:end]
@@ -55,7 +57,9 @@ def list_sensors(request, page: int = 1, page_size: int = 10, q: str = None):
         for sensor in sensors
     ]
 
-    return {"success": True, "data": sensors_list}
+    has_more = end < total_count
+
+    return {"success": True, "data": sensors_list, "has_more": has_more}
 
 @api.get("/sensors/{sensor_id}", auth=JWTAuth())
 def get_sensor(request, sensor_id: int):

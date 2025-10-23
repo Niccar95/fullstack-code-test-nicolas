@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(10);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchSensors = async () => {
@@ -17,6 +18,7 @@ const Dashboard = () => {
       if (response.success) {
         console.log("Sensors fetched", response);
         setSensors(response.data);
+        setHasMore(response.has_more || false);
       } else {
         console.log("Failed to fetch sensors", response.error);
       }
@@ -29,6 +31,7 @@ const Dashboard = () => {
     const response = await getSensors(searchQuery, page, pageSize);
     if (response.success) {
       setSensors(response.data);
+      setHasMore(response.has_more || false);
     }
   };
 
@@ -57,7 +60,7 @@ const Dashboard = () => {
               currentPage={page}
               nextPage={handleNextPage}
               previousPage={handlePreviousPage}
-              more={sensors.length === pageSize}
+              more={hasMore}
             />
           ) : (
             <p className="text-gray-600 mt-4">
