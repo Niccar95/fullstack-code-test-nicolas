@@ -3,9 +3,9 @@ import Layout from "./pages/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import SensorDetail from "./pages/SensorDetail";
 import Error from "./pages/Error";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SensorDetails from "./pages/SensorDetails";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/dashboard/sensors/:id", element: <SensorDetail /> },
+      { path: "/dashboard/sensors/:id", element: <SensorDetails /> },
     ],
     errorElement: <Error />,
   },

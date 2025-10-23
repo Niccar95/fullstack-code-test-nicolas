@@ -4,8 +4,9 @@ import { getSensor } from "../services/sensorService";
 import type { Sensor } from "../types/sensor";
 import { getReadings } from "../services/readingService";
 import type { Reading } from "../types/reading";
+import ReadingsChart from "../components/ReadingsChart";
 
-const SensorDetail = () => {
+const SensorDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [sensor, setSensor] = useState<Sensor | null>(null);
   const [readings, setReadings] = useState<Reading[] | null>(null);
@@ -39,8 +40,6 @@ const SensorDetail = () => {
     fetchSensorReadings();
   }, [id]);
 
-  console.log(readings);
-
   return (
     <section>
       {loading ? (
@@ -57,10 +56,11 @@ const SensorDetail = () => {
               {sensor.description && <p>Description: {sensor.description}</p>}
             </div>
           </div>
+          {readings && <ReadingsChart readings={readings} />}
         </>
       )}
     </section>
   );
 };
 
-export default SensorDetail;
+export default SensorDetails;
