@@ -15,7 +15,10 @@ export const getReadings = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: { timestamp_from: timestampFrom, timestamp_to: timestampTo },
+        params: {
+          timestamp_from: timestampFrom || undefined,
+          timestamp_to: timestampTo || undefined
+        },
       }
     );
     return response.data;

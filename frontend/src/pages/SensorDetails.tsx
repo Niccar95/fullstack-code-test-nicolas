@@ -11,6 +11,8 @@ const SensorDetails = () => {
   const [sensor, setSensor] = useState<Sensor | null>(null);
   const [readings, setReadings] = useState<Reading[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [timestampFrom, setTimestampFrom] = useState<string>("");
+  const [timestampTo, setTimestampTo] = useState<string>("");
 
   useEffect(() => {
     const fetchSensor = async () => {
@@ -30,7 +32,11 @@ const SensorDetails = () => {
     const fetchSensorReadings = async () => {
       if (!id) return;
 
-      const response = await getReadings(Number(id));
+      const response = await getReadings(
+        Number(id),
+        timestampFrom,
+        timestampTo
+      );
       if (response.success && response.data) {
         setReadings(response.data);
       }
@@ -38,7 +44,12 @@ const SensorDetails = () => {
     };
 
     fetchSensorReadings();
-  }, [id]);
+  }, [id, timestampFrom, timestampTo]);
+
+  const handleReadingsFilter = (timestampFrom: string, timestampTo: string) => {
+    setTimestampFrom(timestampFrom);
+    setTimestampTo(timestampTo);
+  };
 
   return (
     <section>
@@ -56,7 +67,12 @@ const SensorDetails = () => {
               {sensor.description && <p>Description: {sensor.description}</p>}
             </div>
           </div>
-          {readings && <ReadingsChart readings={readings} />}
+          {readings && (
+            <ReadingsChart
+              readings={readings}
+              handleReadingsFilter={handleReadingsFilter}
+            />
+          )}
         </>
       )}
     </section>

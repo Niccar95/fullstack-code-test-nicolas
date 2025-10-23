@@ -8,5 +8,5 @@ export interface Reading {
   id: number;
   temperature: number;
   humidity: number;
-  timestamp: Date;
+  timestamp: string;
 }
