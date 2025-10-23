@@ -1,5 +1,4 @@
-from typing import List
-from ninja.security import HttpBearer 
+from ninja.security import HttpBearer
 from rest_framework_simplejwt.tokens import AccessToken
 from ninja import NinjaAPI, Schema
 from datetime import datetime
@@ -14,13 +13,7 @@ class ReadingSchema(Schema):
     humidity: float
     timestamp: datetime
 
-class ReadingSchemaList(Schema):
-    id: int
-    sensor_id: int
-    temperature: float
-    humidity: float
-    timestamp: datetime
-    
+
 class JWTAuth(HttpBearer):
     def authenticate(self, request, token):
         try:
@@ -31,28 +24,39 @@ class JWTAuth(HttpBearer):
         except:
             return None
 
-@api.get("/sensors/{sensor_id}/readings", auth=JWTAuth(), response=List[ReadingSchemaList])
+@api.get("/sensors/{sensor_id}/readings", auth=JWTAuth())
 def list_readings(request, sensor_id: int, timestamp_from: datetime = None, timestamp_to: datetime = None):
     sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
-    
+
     readings = Reading.objects.filter(sensor=sensor)
 
     if timestamp_from:
         readings = readings.filter(timestamp__gte=timestamp_from)
     if timestamp_to:
         readings = readings.filter(timestamp__lte=timestamp_to)
-    
-    return readings
 
-@api.post("/sensors/{sensor_id}/readings", auth=JWTAuth(), response=ReadingSchema)
+    readings_list = [
+        {
+            "id": reading.id,
+            "sensor_id": reading.sensor.id,
+            "temperature": reading.temperature,
+            "humidity": reading.humidity,
+            "timestamp": reading.timestamp
+        }
+        for reading in readings
+    ]
+
+    return {"success": True, "data": readings_list}
+
+@api.post("/sensors/{sensor_id}/readings", auth=JWTAuth())
 def create_reading(request, sensor_id: int, payload: ReadingSchema):
      sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
-     
+
      reading = Reading.objects.create(
         sensor=sensor,
         temperature=payload.temperature,
         humidity=payload.humidity,
         timestamp=payload.timestamp
     )
-     
-     return reading
+
+     return {"success": True, "id": reading.id}

@@ -10,15 +10,3 @@ export interface SensorResponse {
   data?: Sensor[];
   error?: string;
 }
-
-export interface AuthResponse {
-  success: boolean;
-  message: string;
-  access_token: string;
-  refresh_token: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-  };
-}

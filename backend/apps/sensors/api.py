@@ -1,7 +1,6 @@
-from typing import List
 from apps.sensors.models import Sensor
 from ninja import NinjaAPI, Schema
-from ninja.security import HttpBearer 
+from ninja.security import HttpBearer
 from rest_framework_simplejwt.tokens import AccessToken
 
 api = NinjaAPI(urls_namespace='sensors')
@@ -11,13 +10,7 @@ class SensorSchema(Schema):
     description: str = None
     model: str
 
-class SensorSchemaList(Schema):
-    id: int
-    name: str
-    model: str
-    description: str = None 
-    
-    
+
 class JWTAuth(HttpBearer):
     def authenticate(self, request, token):
         try:
@@ -40,36 +33,61 @@ def create_sensor(request, payload: SensorSchema):
     return {"success": True, "id": sensor.id, "name": sensor.name}
 
 
-@api.get("/sensors", auth=JWTAuth(), response=List[SensorSchemaList])
+@api.get("/sensors", auth=JWTAuth())
 def list_sensors(request, page: int = 1, page_size: int = 10, q: str = None):
 
     sensors = Sensor.objects.filter(owner=request.auth)
-    
+
     if q:
         sensors = sensors.filter(name__icontains=q) | sensors.filter(model__icontains=q)
-    
+
     start = (page - 1) * page_size
     end = start + page_size
     sensors = sensors[start:end]
-    
-    return sensors
 
-@api.get("/sensors/{sensor_id}", auth=JWTAuth(), response=SensorSchemaList)
+    sensors_list = [
+        {
+            "id": sensor.id,
+            "name": sensor.name,
+            "model": sensor.model,
+            "description": sensor.description
+        }
+        for sensor in sensors
+    ]
+
+    return {"success": True, "data": sensors_list}
+
+@api.get("/sensors/{sensor_id}", auth=JWTAuth())
 def get_sensor(request, sensor_id: int):
     sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
-    return sensor
 
-@api.put("/sensors/{sensor_id}", auth=JWTAuth(), response=SensorSchemaList)
+    sensor_data = {
+        "id": sensor.id,
+        "name": sensor.name,
+        "model": sensor.model,
+        "description": sensor.description
+    }
+
+    return {"success": True, "data": sensor_data}
+
+@api.put("/sensors/{sensor_id}", auth=JWTAuth())
 def update_sensor(request, sensor_id: int, payload: SensorSchema):
     sensor = Sensor.objects.get(id=sensor_id, owner=request.auth)
-    
+
     sensor.name = payload.name
     sensor.description = payload.description
     sensor.model = payload.model
-    
+
     sensor.save()
-    
-    return sensor
+
+    sensor_data = {
+        "id": sensor.id,
+        "name": sensor.name,
+        "model": sensor.model,
+        "description": sensor.description
+    }
+
+    return {"success": True, "data": sensor_data}
 
 @api.delete("/sensors/{sensor_id}", auth=JWTAuth())
 def delete_sensor(request, sensor_id: int):

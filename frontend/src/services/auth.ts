@@ -1,10 +1,10 @@
 import axios from "axios";
-import type { AuthResponse } from "../types/sensor";
+import type { AuthResponse } from "../types/auth";
 
 export async function login(
   username: string,
   password: string
-): Promise<{ success: boolean; data?: AuthResponse; error?: string }> {
+): Promise<AuthResponse> {
   try {
     const response = await axios.post<AuthResponse>(
       "http://localhost:8000/api/auth/login",
@@ -14,12 +14,11 @@ export async function login(
       }
     );
 
-    if (response.data.success) {
-      sessionStorage.setItem("access_token", response.data.access_token);
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, error: response.data.message };
+    if (response.data.success && response.data.data) {
+      sessionStorage.setItem("access_token", response.data.data.access_token);
     }
+
+    return response.data;
   } catch {
     return { success: false, error: "Login failed" };
   }
@@ -29,7 +28,7 @@ export async function register(
   username: string,
   email: string,
   password: string
-): Promise<{ success: boolean; data?: AuthResponse; error?: string }> {
+): Promise<AuthResponse> {
   try {
     const response = await axios.post<AuthResponse>(
       "http://localhost:8000/api/auth/register",
@@ -40,9 +39,11 @@ export async function register(
       }
     );
 
-    sessionStorage.setItem("access_token", response.data.access_token);
+    if (response.data.success && response.data.data) {
+      sessionStorage.setItem("access_token", response.data.data.access_token);
+    }
 
-    return { success: true, data: response.data };
+    return response.data;
   } catch {
     return { success: false, error: "Registration failed" };
   }

@@ -48,20 +48,24 @@ const Dashboard = () => {
   return (
     <section>
       <h1>Welcome back!</h1>
-      {sensors && sensors.length > 0 ? (
+      {sensors ? (
         <>
           <SensorList sensorList={sensors} sensorSearch={handleSearch} refetchSensors={refetchSensors} />
-          <Pagination
-            currentPage={page}
-            nextPage={handleNextPage}
-            previousPage={handlePreviousPage}
-            more={sensors.length === pageSize}
-          />
+          {sensors.length > 0 ? (
+            <Pagination
+              currentPage={page}
+              nextPage={handleNextPage}
+              previousPage={handlePreviousPage}
+              more={sensors.length === pageSize}
+            />
+          ) : (
+            <p className="text-gray-600 mt-4">
+              No sensors found. Try a different search or add a new sensor.
+            </p>
+          )}
         </>
       ) : (
-        <p className="text-gray-600">
-          No sensors found. Add your first sensor to get started!
-        </p>
+        <p className="text-gray-600">Loading...</p>
       )}
     </section>
   );

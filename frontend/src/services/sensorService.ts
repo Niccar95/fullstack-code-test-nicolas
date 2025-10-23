@@ -9,7 +9,7 @@ export async function getSensors(
 ): Promise<SensorResponse> {
   try {
     const token = getAccessToken();
-    const response = await axios.get<Sensor[]>(
+    const response = await axios.get<{ success: boolean; data: Sensor[] }>(
       "http://localhost:8000/api/sensors",
       {
         headers: {
@@ -19,9 +19,29 @@ export async function getSensors(
       }
     );
 
-    return { success: true, data: response.data };
+    return response.data;
   } catch {
     return { success: false, error: "Failed to fetch sensors" };
+  }
+}
+
+export async function getSensor(
+  id: number
+): Promise<{ success: boolean; data?: Sensor; error?: string }> {
+  try {
+    const token = getAccessToken();
+    const response = await axios.get<{ success: boolean; data: Sensor }>(
+      `http://localhost:8000/api/sensors/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch {
+    return { success: false, error: "Failed to fetch sensor" };
   }
 }
 
@@ -50,7 +70,7 @@ export async function addSensor(
       }
     );
 
-    return { success: true, data: response.data };
+    return response.data;
   } catch {
     return { success: false, error: "Failed to create new sensor" };
   }

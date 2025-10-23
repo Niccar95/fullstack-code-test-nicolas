@@ -16,7 +16,7 @@ const Pagination = ({
       <button
         onClick={previousPage}
         disabled={currentPage === 1}
-        className="px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66] disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className="px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66] disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 cursor-pointer"
       >
         Previous
       </button>
@@ -24,7 +24,7 @@ const Pagination = ({
       <button
         onClick={nextPage}
         disabled={!more}
-        className="px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66] disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className="px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66] disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 cursor-pointer"
       >
         Next
       </button>

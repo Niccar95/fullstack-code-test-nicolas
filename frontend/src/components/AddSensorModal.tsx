@@ -72,13 +72,13 @@ const AddSensorModal = ({ isOpen, closeModal, addSensor }: AddSensorModalProps) 
             <button
               type="button"
               onClick={closeModal}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66]"
+              className="flex-1 px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66] focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 cursor-pointer"
             >
               Add Sensor
             </button>

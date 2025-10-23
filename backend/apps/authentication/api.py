@@ -23,13 +23,15 @@ def login_view(request, payload: LoginSchema):
 
         return {
             "success": True,
-            "message": "User logged in successfully",
-            "access_token": str(refresh.access_token),
-            "refresh_token": str(refresh),
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email
+            "data": {
+                "message": "User logged in successfully",
+                "access_token": str(refresh.access_token),
+                "refresh_token": str(refresh),
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email
+                }
             }
         }
     return 401, {"success": False, "message": "Invalid credentials"}
@@ -58,13 +60,15 @@ def register(request, payload: RegisterSchema):
 
     return {
         "success": True,
-        "message": "User registered successfully",
-        "access_token": str(refresh.access_token),
-        "refresh_token": str(refresh),
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email
+        "data": {
+            "message": "User registered successfully",
+            "access_token": str(refresh.access_token),
+            "refresh_token": str(refresh),
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            }
         }
     }
 

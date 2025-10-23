@@ -10,7 +10,11 @@ interface ISensorListProps {
   refetchSensors: () => void;
 }
 
-const SensorList = ({ sensorList, sensorSearch, refetchSensors }: ISensorListProps) => {
+const SensorList = ({
+  sensorList,
+  sensorSearch,
+  refetchSensors,
+}: ISensorListProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleAddSensor = async (
@@ -43,7 +47,7 @@ const SensorList = ({ sensorList, sensorSearch, refetchSensors }: ISensorListPro
 
       <button
         onClick={() => setShowModal(true)}
-        className="w-fit p-3 bg-[#4B4A7F] text-white font-semibold rounded transition hover:bg-[#3d3a66]"
+        className="w-fit p-3 bg-[#4B4A7F] text-white font-semibold rounded transition hover:bg-[#3d3a66] focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 cursor-pointer"
       >
         Add Sensor
       </button>
@@ -54,9 +58,10 @@ const SensorList = ({ sensorList, sensorSearch, refetchSensors }: ISensorListPro
         addSensor={handleAddSensor}
       />
 
-      <div className="grid grid-cols-3 gap-4 p-4 font-semibold border-b border-gray-300 bg-gray-50">
+      <div className="grid grid-cols-4 gap-4 p-4 font-semibold border-b border-gray-300 bg-gray-50">
         <div>ID</div>
         <div>Name</div>
+        <div>Model</div>
         <div></div>
       </div>
       <ul>
