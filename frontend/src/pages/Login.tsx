@@ -19,12 +19,18 @@ const Login = () => {
     if (!username) {
       setUsernameError("Username is required");
       hasError = true;
+    } else if (username.length < 3) {
+      setUsernameError("Username must be at least 3 characters");
+      hasError = true;
     } else {
       setUsernameError("");
     }
 
     if (!password) {
       setPasswordError("Password is required");
+      hasError = true;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
       hasError = true;
     } else {
       setPasswordError("");
@@ -56,8 +62,8 @@ const Login = () => {
           </p>
         </div>
       </div>
-      <section className="mx-auto flex flex-col items-center justify-center h-screen w-screen md:w-[1200px] p-2 md:p-0">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#4B4A7F] mb-2 text-center">
+      <section className="mx-auto flex flex-col items-center h-screen w-screen md:w-[1200px] p-2 md:p-0">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#4B4A7F] mt-10 mb-2 text-center">
           Sense You've Been Gone
         </h1>
         <p className="text-gray-600 mb-8 text-center">

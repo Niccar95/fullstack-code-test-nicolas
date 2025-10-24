@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSensor } from "../services/sensorService";
 import type { Sensor } from "../types/sensor";
-import { getReadings } from "../services/readingService";
+import { getReadings, addReading } from "../services/readingService";
 import type { Reading } from "../types/reading";
 import ReadingsChart from "../components/ReadingsChart";
+import AddModal from "../components/AddModal";
 
 const SensorDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +15,7 @@ const SensorDetails = () => {
   const [loading, setLoading] = useState(true);
   const [timestampFrom, setTimestampFrom] = useState<string>("");
   const [timestampTo, setTimestampTo] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchSensor = async () => {
@@ -48,8 +50,26 @@ const SensorDetails = () => {
   }, [id, timestampFrom, timestampTo]);
 
   const handleReadingsFilter = (timestampFrom: string, timestampTo: string) => {
-    setTimestampFrom(timestampFrom);
-    setTimestampTo(timestampTo);
+    const fromISO = timestampFrom ? new Date(timestampFrom).toISOString() : "";
+    const toISO = timestampTo ? new Date(timestampTo).toISOString() : "";
+    setTimestampFrom(fromISO);
+    setTimestampTo(toISO);
+  };
+
+  const refetchReadings = async () => {
+    if (!id) return;
+    const response = await getReadings(Number(id), timestampFrom, timestampTo);
+    if (response.success && response.data) {
+      setReadings(response.data);
+    }
+  };
+
+  const handleAddReading = async (temperature: number, humidity: number) => {
+    if (!id) return;
+    const response = await addReading(Number(id), temperature, humidity);
+    if (response.success) {
+      refetchReadings();
+    }
   };
 
   return (
@@ -66,13 +86,32 @@ const SensorDetails = () => {
           >
             ← Back to Dashboard
           </button>
-          <div className="mb-6">
-            <h1 className="text-4xl font-bold text-[#4B4A7F] mb-3">{sensor.name}</h1>
-            <div className="mt-2 text-gray-600 space-y-1">
-              <p className="text-sm"><span className="font-medium">Sensor ID:</span> {id}</p>
-              <p className="text-sm"><span className="font-medium">Model:</span> {sensor.model}</p>
-              {sensor.description && <p className="text-sm"><span className="font-medium">Description:</span> {sensor.description}</p>}
+          <div className="mb-6 flex justify-between items-start">
+            <div>
+              <h1 className="text-4xl font-bold text-[#4B4A7F] mb-3">
+                {sensor.name}
+              </h1>
+              <div className="mt-2 text-gray-600 space-y-1">
+                <p className="text-sm">
+                  <span className="font-medium">Sensor ID:</span> {id}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium">Model:</span> {sensor.model}
+                </p>
+                {sensor.description && (
+                  <p className="text-sm">
+                    <span className="font-medium">Description:</span>{" "}
+                    {sensor.description}
+                  </p>
+                )}
+              </div>
             </div>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="px-4 py-2 bg-[#4B4A7F] text-white rounded hover:bg-[#3d3a66] focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 cursor-pointer"
+            >
+              Add Reading
+            </button>
           </div>
           {readings && (
             <ReadingsChart
@@ -80,6 +119,11 @@ const SensorDetails = () => {
               handleReadingsFilter={handleReadingsFilter}
             />
           )}
+          <AddModal
+            isOpen={isModalOpen}
+            closeModal={() => setIsModalOpen(false)}
+            addReading={handleAddReading}
+          />
         </>
       )}
     </section>

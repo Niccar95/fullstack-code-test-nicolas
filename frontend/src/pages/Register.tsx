@@ -23,6 +23,9 @@ const Register = () => {
     if (!username) {
       setUsernameError("Username is required");
       hasError = true;
+    } else if (username.length < 3) {
+      setUsernameError("Username must be at least 3 characters");
+      hasError = true;
     } else {
       setUsernameError("");
     }
@@ -30,12 +33,18 @@ const Register = () => {
     if (!email) {
       setEmailError("Email is required");
       hasError = true;
+    } else if (!email.includes("@") || !email.includes(".")) {
+      setEmailError("Please enter a valid email address");
+      hasError = true;
     } else {
       setEmailError("");
     }
 
     if (!password) {
       setPasswordError("Password is required");
+      hasError = true;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
       hasError = true;
     } else {
       setPasswordError("");
@@ -67,14 +76,8 @@ const Register = () => {
           </p>
         </div>
       </div>
-      <section className="mx-auto flex flex-col items-center justify-center h-screen w-screen md:w-[1200px] p-2 md:p-0">
-        <button
-          onClick={() => navigate("/")}
-          className="mb-8 text-[#4B4A7F] hover:text-[#3d3a66] cursor-pointer self-start ml-2 md:ml-0"
-        >
-          ← Back to Login
-        </button>
-        <h1 className="text-3xl md:text-4xl font-bold text-[#4B4A7F] mb-2 text-center">
+      <section className="mx-auto flex flex-col items-center h-screen w-screen md:w-[1200px] p-2 md:p-0">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#4B4A7F] mt-10 mb-2 text-center">
           Create Account
         </h1>
         <p className="text-gray-600 mb-8 text-center">
@@ -146,6 +149,13 @@ const Register = () => {
             Sign Up
           </button>
         </form>
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="mt-4 text-[#4B4A7F] hover:text-[#3d3a66] cursor-pointer text-sm"
+        >
+          ← Back to Login
+        </button>
       </section>
     </>
   );

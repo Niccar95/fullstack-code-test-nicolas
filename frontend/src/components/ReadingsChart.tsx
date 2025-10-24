@@ -38,23 +38,23 @@ const ReadingsChart = ({ readings, handleReadingsFilter }: IReadingProps) => {
 
   return (
     <>
-      <div className="mb-4 flex gap-4">
-        <div className="flex-1">
+      <div className="mb-4 flex flex-col sm:flex-row gap-4">
+        <div>
           <label className="block mb-2 font-medium">From Date & Time:</label>
           <input
             type="datetime-local"
             value={timestampFrom}
             onChange={(e) => handleFromChange(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="p-3 border border-gray-300 rounded-lg w-full sm:w-auto"
           />
         </div>
-        <div className="flex-1">
+        <div>
           <label className="block mb-2 font-medium">To Date & Time:</label>
           <input
             type="datetime-local"
             value={timestampTo}
             onChange={(e) => handleToChange(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="p-3 border border-gray-300 rounded-lg w-full sm:w-auto"
           />
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { addSensor } from "../services/sensorService";
 import type { Sensor as SensorType } from "../types/sensor";
 import Sensor from "./Sensor";
-import AddSensorModal from "./AddSensorModal";
+import AddModal from "./AddModal";
 
 interface ISensorListProps {
   sensorList: SensorType[];
@@ -47,11 +47,11 @@ const SensorList = ({
           id="search"
           type="text"
           onChange={(e) => sensorSearch(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg"
+          className="w-full md:w-100 p-3 border border-gray-300 rounded-lg"
         />
       </div>
 
-      <AddSensorModal
+      <AddModal
         isOpen={showModal}
         closeModal={() => setShowModal(false)}
         addSensor={handleAddSensor}

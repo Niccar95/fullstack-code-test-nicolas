@@ -15,8 +15,12 @@ const Sensor = ({ sensor }: SensorProps) => {
   return (
     <li className="grid grid-cols-4 gap-4 p-4 border-b border-gray-200 hover:bg-gray-50">
       <div className="flex items-center">{sensor.id}</div>
-      <div className="flex items-center">{sensor.name}</div>
-      <div className="flex items-center">{sensor.model}</div>
+      <div className="flex items-center min-w-0">
+        <span className="block truncate md:whitespace-normal">{sensor.name}</span>
+      </div>
+      <div className="flex items-center min-w-0">
+        <span className="block truncate md:whitespace-normal">{sensor.model}</span>
+      </div>
       <button
         onClick={handleViewDetails}
         className="flex items-center w-fit text-[#4B4A7F] hover:underline focus:outline-none focus:ring-2 focus:ring-[#4B4A7F] focus:ring-offset-2 rounded cursor-pointer"
