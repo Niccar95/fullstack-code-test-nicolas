@@ -1,10 +1,10 @@
 import axios from "axios";
 import type { AuthResponse } from "../types/auth";
 
-export async function login(
+export const login = async (
   username: string,
   password: string
-): Promise<AuthResponse> {
+): Promise<AuthResponse> => {
   try {
     const response = await axios.post<AuthResponse>(
       "http://localhost:8000/api/auth/login",
@@ -22,13 +22,13 @@ export async function login(
   } catch {
     return { success: false, error: "Login failed" };
   }
-}
+};
 
-export async function register(
+export const register = async (
   username: string,
   email: string,
   password: string
-): Promise<AuthResponse> {
+): Promise<AuthResponse> => {
   try {
     const response = await axios.post<AuthResponse>(
       "http://localhost:8000/api/auth/register",
@@ -47,12 +47,12 @@ export async function register(
   } catch {
     return { success: false, error: "Registration failed" };
   }
-}
+};
 
-export function getAccessToken() {
+export const getAccessToken = () => {
   return sessionStorage.getItem("access_token");
-}
+};
 
-export function logout() {
+export const logout = () => {
   sessionStorage.removeItem("access_token");
-}
+};
